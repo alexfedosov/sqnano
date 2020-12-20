@@ -1,5 +1,11 @@
 import Foundation
 
+func quit() {
+  print("")
+  print("Bye!")
+  exit(EXIT_SUCCESS)
+}
+
 public final class SQNanoCore {
   private let arguments: [String]
 
@@ -7,10 +13,18 @@ public final class SQNanoCore {
     self.arguments = arguments
   }
 
+  func trapSignals() {
+    signal(SIGINT, { _ in quit() })
+  }
+
   public func runInteractive() {
+    trapSignals()
     while true {
       print("sqnano> ", terminator: "")
-      guard let command = readLine(), command.count > 0 else {
+      guard let command = readLine() else {
+        return quit()
+      }
+      guard command.count > 0 else {
         print("Press ctrl+c or ctrl+d to exit")
         continue
       }
@@ -26,7 +40,7 @@ public final class SQNanoCore {
         return
       }
       switch metaCommand {
-      case .quit, .quitAlias: exit(EXIT_SUCCESS)
+      case .quit, .quitAlias: quit()
       }
     }
 
