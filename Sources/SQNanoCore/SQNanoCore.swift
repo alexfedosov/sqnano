@@ -1,28 +1,18 @@
 import Foundation
 
-func quit() {
-  print("")
-  print("Bye!")
-  exit(EXIT_SUCCESS)
-}
-
 public final class SQNanoCore {
+  private var exitFlag = false
   private let arguments: [String]
 
   public init(arguments: [String] = CommandLine.arguments) {
     self.arguments = arguments
   }
 
-  func trapSignals() {
-    signal(SIGINT, { _ in quit() })
-  }
-
   public func runInteractive() {
-    trapSignals()
-    while true {
+    while !exitFlag {
       print("sqnano> ", terminator: "")
       guard let command = readLine() else {
-        return quit()
+        return
       }
       guard command.count > 0 else {
         print("Press ctrl+c or ctrl+d to exit")
@@ -40,7 +30,9 @@ public final class SQNanoCore {
         return
       }
       switch metaCommand {
-      case .quit, .quitAlias: quit()
+      case .quit, .quitAlias:
+        exitFlag = true
+        return
       }
     }
 
