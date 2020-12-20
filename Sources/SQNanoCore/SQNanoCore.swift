@@ -1,9 +1,5 @@
 import Foundation
 
-enum ControlCommand: String {
-  case exit
-}
-
 public final class SQNanoCore {
   private let arguments: [String]
 
@@ -23,13 +19,17 @@ public final class SQNanoCore {
   }
 
   func execute(_ command: String) {
-    if let controlCommand = ControlCommand(rawValue: command.lowercased()) {
-      switch controlCommand {
-      case .exit:
-        print("bye!")
-        exit(EXIT_SUCCESS)
+    if command.starts(with: "\\") {
+      guard command.count > 0,
+            let metaCommand = MetaCommand(rawValue: String(command.dropFirst())) else {
+        print("Unrecognized meta-command: \"\(command)\"")
+        return
+      }
+      switch metaCommand {
+      case .quit, .quitAlias: exit(EXIT_SUCCESS)
       }
     }
+
     print("Unknown command \"\(command)\"")
   }
 }

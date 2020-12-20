@@ -7,8 +7,8 @@ let package = Package(
     name: "sqnano",
     dependencies: [],
     targets: [
-    .target(name: "sqnano", dependencies: ["SQNanoCore"]),
-    .target(name: "SQNanoCore", dependencies: []),
-    .testTarget(name: "sqnanoTests", dependencies: ["sqnano"]),
+      .target(name: "sqnano", dependencies: ["SQNanoCore"]),
+      .target(name: "SQNanoCore", dependencies: []),
+      .testTarget(name: "SQNanoCoreTests", dependencies: ["SQNanoCore"]),
     ]
 )
